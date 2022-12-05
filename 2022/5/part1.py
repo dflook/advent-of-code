@@ -32,15 +32,9 @@ print(stacks)
 print(moves)
 
 for quantity, source, dest in moves:
-
-    moved_crates = stacks[source-1][-(quantity):]
-
     for _ in range(quantity):
-        stacks[source-1].pop()
-
-    stacks[dest-1].extend(moved_crates)
-
-    print(stacks)
+        stacks[dest-1].append(stacks[source-1].pop())
+        print(stacks)
 
 print(''.join(s.pop() for s in stacks))
 

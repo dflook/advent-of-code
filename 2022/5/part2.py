@@ -1,19 +1,46 @@
+import re
 import string
 from pathlib import Path
 from typing import Set, Tuple, Iterable
 
-def get_assignment(assignment: str) -> set[str]:
-    start, end = assignment.split('-')
-    return set(range(int(start), int(end)+1))
+def read(p: str) -> Tuple[list[list[str]], list[Tuple[int, int, int]]]:
 
-def read(p: str) -> Iterable[Tuple[Set, Set]]:
+    stacks: list[list[str]] = []
+    moves: list[Tuple[int, int, int]] = []
+
     for line in Path(p).read_text().splitlines():
-        left, right = line.split(',')
-        yield get_assignment(left), get_assignment(right)
 
-sum = 0
-for left, right in read('input.txt'):
-    if left.intersection(right):
-        sum += 1
+        if match := re.match(r'move (\d+) from (\d+) to (\d+)', line):
+            moves.append((int(match[1]), int(match[2]), int(match[3])))
+        elif '[' not in line:
+            continue
+        else:
+            for stack_num, crate in enumerate(line[1::4]):
+                if len(stacks) <= stack_num:
+                    stacks.append([])
 
-print(sum)
+                if crate == ' ':
+                    continue
+
+                stacks[stack_num].insert(0, crate)
+
+    return stacks, moves
+
+stacks, moves = read('input.txt')
+
+print(stacks)
+print(moves)
+
+for quantity, source, dest in moves:
+
+    moved_crates = stacks[source-1][-(quantity):]
+
+    for _ in range(quantity):
+        stacks[source-1].pop()
+
+    stacks[dest-1].extend(moved_crates)
+
+    print(stacks)
+
+print(''.join(s.pop() for s in stacks))
+

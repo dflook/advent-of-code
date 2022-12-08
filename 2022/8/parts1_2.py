@@ -26,9 +26,6 @@ def read_grid(inp: str) -> Grid:
         for y, tree_height in enumerate(line):
             grid[x].append(Tree(int(tree_height)))
 
-            if x == 0 or y == 0 or x == len(lines) - 1 or y == len(line) - 1:
-                grid[x][y].visible = True
-
     return grid
 
 

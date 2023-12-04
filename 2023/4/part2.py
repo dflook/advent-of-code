@@ -4,6 +4,7 @@ from functools import reduce
 from pathlib import Path
 from typing import Iterable, Tuple, Union
 
+
 @dataclass
 class Card:
     id: int
@@ -16,11 +17,11 @@ class Card:
     def score(self) -> int:
         return len(self.winning_numbers.intersection(self.numbers))
 
+
 def read_cards(input: str) -> Iterable[Card]:
     for line in input.splitlines():
 
         if (match := re.match(r'Card\s+(?P<card>\d+):\s+(?P<winners>.*)\s+\|\s+(?P<numbers>.*)', line)) is not None:
-
             winners = set(int(i) for i in re.split(r'\s+', match.group('winners')))
             numbers = set(int(i) for i in re.split(r'\s+', match.group('numbers')))
 
@@ -28,8 +29,8 @@ def read_cards(input: str) -> Iterable[Card]:
             print(card)
             yield card
 
-def answer(input: str) -> str:
 
+def answer(input: str) -> int:
     cards = {card.id: card for card in read_cards(input)}
 
     total_cards = 0
@@ -42,5 +43,6 @@ def answer(input: str) -> str:
 
     return total_cards
 
-#print(answer(Path('test.txt').read_text()))
+
+# print(answer(Path('test.txt').read_text()))
 print(answer(Path('input.txt').read_text()))
